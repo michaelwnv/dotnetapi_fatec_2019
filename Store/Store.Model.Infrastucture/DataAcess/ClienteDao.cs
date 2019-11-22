@@ -17,7 +17,18 @@ namespace Store.Model.Infrastucture.DataAcess
 
         public override List<Cliente> CastToObject(SqlDataReader Reader)
         {
-            throw new NotImplementedException();
+            List<Cliente> Clientes = new List<Cliente>();
+            while (Reader.Read())
+            {
+                Cliente cliente = new Cliente();
+                cliente.Id = Convert.ToInt32(Reader["ID"]);
+                cliente.Nome = Convert.ToString(Reader["NOME"]);
+                cliente.Cpf = Convert.ToString(Reader["CPF"]);
+                cliente.Email = Convert.ToString(Reader["EMAIL"]);
+                cliente.Senha = Convert.ToString(Reader["SENHA"]);
+                Clientes.Add(cliente);
+            }
+            return Clientes;
         }
 
         public Cliente Insert(Cliente cliente)
@@ -60,7 +71,7 @@ namespace Store.Model.Infrastucture.DataAcess
 
         protected override void SqlBase()
         {
-            throw new NotImplementedException();
+            this.Sql.Append(" SELECT * FROM TB_CLIENTE ");
         }
 
         public List<Cliente> Select()
@@ -70,12 +81,35 @@ namespace Store.Model.Infrastucture.DataAcess
 
         public Cliente Select(int id)
         {
-            throw new NotImplementedException();
+         
+            this.SqlBase();
+
+            this.Sql.Append(" WHERE TB_CLIENTE.ID = @ID ");
+            this.AddParameter("@ID", id);
+
+            using (var DataReader = this.ExecuteReader())
+            {
+                return this.CastToObject(DataReader).FirstOrDefault();
+            }
+
+           
         }
 
+       
         public Cliente Select(Cliente cliente)
         {
-            throw new NotImplementedException();
+            this.SqlBase();
+
+            this.Sql.Append(" WHERE TB_CLiENTE.EMAIL = @EMAIL AND ");
+            this.Sql.Append(" WHERE TB_CLiENTE.SENHA = @SENHA ");
+
+            this.AddParameter("@EMAIL", cliente.Email);
+            this.AddParameter("@SENHA", cliente.Senha);
+
+            using (var DataReader = this.ExecuteReader())
+            {
+                return this.CastToObject(DataReader).FirstOrDefault();
+            }
         }
     }
 }
