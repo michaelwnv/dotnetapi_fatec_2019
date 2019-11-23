@@ -87,6 +87,8 @@ namespace Store.Model.Infrastucture.DataAcess
             this.Sql.Append(" WHERE TB_CLIENTE.ID = @ID ");
             this.AddParameter("@ID", id);
 
+            
+
             using (var DataReader = this.ExecuteReader())
             {
                 return this.CastToObject(DataReader).FirstOrDefault();
@@ -95,13 +97,15 @@ namespace Store.Model.Infrastucture.DataAcess
            
         }
 
-       
+        
+
+
         public Cliente Select(Cliente cliente)
         {
             this.SqlBase();
 
             this.Sql.Append(" WHERE TB_CLiENTE.EMAIL = @EMAIL AND ");
-            this.Sql.Append(" WHERE TB_CLiENTE.SENHA = @SENHA ");
+            this.Sql.Append("  TB_CLiENTE.SENHA = @SENHA ");
 
             this.AddParameter("@EMAIL", cliente.Email);
             this.AddParameter("@SENHA", cliente.Senha);
